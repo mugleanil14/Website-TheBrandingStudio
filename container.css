@@ -1,0 +1,45 @@
+/* Container Component */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* About Section Specifics */
+.about-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 40px;
+}
+
+.about-image {
+  flex: 1 1 400px;
+  max-width: 500px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.about-text {
+  flex: 1 1 400px;
+  min-width: 300px;
+}
+
+.about-text h2 {
+  margin-bottom: 15px;
+}
+
+.about-text p {
+  line-height: 1.6;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .about-image {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Branding Studio - iOS Style</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --ios-blue: #007AFF;
+      --ios-gray: #F5F5F7;
+      --ios-label: #1D1D1F;
+      --ios-red: #FF3B30;
+      --ios-green: #34C759;
+      --ios-purple: #AF52DE;
+      --ios-background: linear-gradient(160deg, #F5F5F7 0%, #FFFFFF 100%);
+    }
+
+    /* iOS Style Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
+    }
+
+    body {
+      background: var(--ios-background);
+      color: var(--ios-label);
+      line-height: 1.6;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+
+    /* Canvas for particles */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    /* iOS Navigation Bar with Dynamic Island Style */
+    .ios-navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 88px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .ios-nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--ios-label);
+      transition: transform 0.3s ease;
+    }
+
+    .ios-nav-title:hover {
+      transform: scale(1.05);
+    }
+
+    .ios-nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .ios-nav-link {
+      color: var(--ios-label);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .ios-nav-link:after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--ios-blue);
+      transition: width 0.3s ease;
+    }
+
+    .ios-nav-link:hover {
+      opacity: 1;
+    }
+
+    .ios-nav-link:hover:after {
+      width: 100%;
+    }
+
+    /* Dynamic Island Notification */
+    .dynamic-island {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      background: rgba(0,0,0,0.85);
+      border-radius: 25px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      z-index: 1001;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+    }
+
+    .dynamic-island.show {
+      transform: translateX(-50%) scale(1);
+    }
+
+    .dynamic-island-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--ios-blue);
+      font-size: 16px;
+    }
+
+    .dynamic-island-content h4 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .dynamic-island-content p {
+      margin: 0;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* Hero Section */
+    .ios-hero {
+      margin-top: 88px;
+      height: calc(100vh - 88px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      background-color: #333;
+      background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ios-hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .ios-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .ios-hero-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .ios-hero-subtitle {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 30px;
+    }
+
+    .ios-button {
+      display: inline-block;
+      padding: 14px 30px;
+      border-radius: 30px;
+      background: var(--ios-blue);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
+    }
+
+    .ios-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 122, 255, 0.4);
+    }
+
+    .ios-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 10px rgba(0, 122, 255, 0.3);
+    }
+
+    /* Dynamic Grid with iOS 16+ shadow effect */
+    .dynamic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    .grid-item {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02);
+      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .grid-item:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.03);
+    }
+
+    .grid-media {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 18px 18px 0 0;
+      transition: transform 0.5s ease;
+      background-color: #f0f0f0; /* Fallback background */
+    }
+
+    .grid-item:hover .grid-media {
+      transform: scale(1.05);
+    }
+
+    .grid-content {
+      padding: 18px;
+    }
+
+    /* Section Title with iOS design */
+    .section-title {
+      text-align: center;
+      padding: 40px 20px 20px;
+      position: relative;
+    }
+
+    .section-title h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, var(--ios-blue), var(--ios-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .section-title p {
+      color: #6e6e73;
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* iOS Style Form with haptic feedback */
+    .ios-form-container {
+      padding: 40px 20px;
+      background-color: var(--ios-gray);
+      position: relative;
+    }
+
+    .ios-form {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 28px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.02);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .ios-input {
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .ios-input:focus {
+      border-color: var(--ios-blue);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(0,122,255,0.15);
+    }
+
+    /* iOS 16 style Media Carousel with snap scrolling */
+    .media-carousel-container {
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .media-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 20px 0;
+      gap: 20px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .media-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel-item {
+      scroll-snap-align: start;
+      flex: 0 0 80%;
+      max-width: 500px;
+      min-width: 280px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .carousel-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.03);
+    }
+
+    /* iOS 16 style Features Section */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .feature-item {
+      text-align: center;
+      padding: 30px 20px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .feature-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.03);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--ios-blue);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+      transform: scale(1.1);
+    }
+
+    .feature-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    /* iOS 16 Style Footer */
+    .ios-footer {
+      background: var(--ios-gray);
+      padding: 60px 20px 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .footer-link {
+      color: var(--ios-label);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .footer-link:hover {
+      opacity: 1;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 50%;
+      color: var(--ios-label);
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .social-icon:hover {
+      background: var(--ios-blue);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,122,255,0.2);
+    }
+
+    .copyright {
+      color: #86868b;
+      font-size: 0.9rem;
+    }
+
+    /* Animated glow effect for headers */
+    @keyframes textGlow {
+      0% { text-shadow: 0 0 10px rgba(0, 122, 255, 0); }
+      50% { text-shadow: 0 0 20px rgba(0, 122, 255, 0.5); }
+      100% { text-shadow: 0 0 10px rgba(0, 122, 255, 0); }
+    }
+
+    .ios-hero-title {
+      animation: textGlow 4s infinite;
+    }
+
+    /* iOS 16 style dark mode */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ios-background: #000000;
+        --ios-label: #FFFFFF;
+        --ios-gray: #1C1C1E;
+      }
+
+      .ios-navbar {
+        background: rgba(28, 28, 30, 0.8);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .feature-item, .grid-item, .carousel-item, .testimonial-card, .ios-form {
+        background: #1C1C1E;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.05);
+      }
+
+      .ios-input {
+        background: #2C2C2E;
+        border: 1px solid #3C3C3E;
+        color: white;
+      }
+
+      .ios-input::placeholder {
+        color: rgba(255,255,255,0.5);
+      }
+
+      .social-icon {
+        background: #2C2C2E;
+        color: white;
+      }
+      
+      #particles-js {
+        opacity: 0.8;
+      }
+    }
+
+    /* YouTube responsive container */
+    .youtube-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      overflow: hidden;
+      border-radius: 18px 18px 0 0;
+    }
+
+    .youtube-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Placeholder image for when images are not available */
+    .placeholder-img {
+      width: 100%;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+      font-size: 14px;
+      color: #666;
+      border-radius: 18px 18px 0 0;
+    }
+
+    /* Testimonial card styles */
+    .testimonial-content {
+      padding: 25px;
+      border-radius: 18px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>
+
+  <!-- iOS Navigation -->
+  <nav class="ios-navbar">
+    <h1 class="ios-nav-title">The Branding Studio</h1>
+    <div class="ios-nav-links">
+      <a href="#services" class="ios-nav-link">Services</a>
+      <a href="#work" class="ios-nav-link">Our Work</a>
+      <a href="#contact" class="ios-nav-link">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Dynamic Island Notification -->
+  <div class="dynamic-island" id="dynamicIsland">
+    <div class="dynamic-island-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    <div class="dynamic-island-content">
+      <h4>Message Sent</h4>
+      <p>We'll get back to you soon!</p>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="ios-hero">
+    <div class="ios-hero-content">
+      <h1 class="ios-hero-title">Creative Solutions for Modern Brands</h1>
+      <p class="ios-hero-subtitle">We craft unique brand identities that connect with your audience and drive results.</p>
+      <a href="#contact" class="ios-button">Get Started</a>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="services">
+    <div class="section-title">
+      <h2>Our Services</h2>
+      <p>Comprehensive branding solutions for businesses of all sizes</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-paint-brush"></i>
+        </div>
+        <h3 class="feature-title">Brand Identity</h3>
+        <p>We create cohesive visual identities that tell your brand's story.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-desktop"></i>
+        </div>
+        <h3 class="feature-title">Web Design</h3>
+        <p>Beautiful, functional websites that convert visitors into customers.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-bullhorn"></i>
+        </div>
+        <h3 class="feature-title">Marketing</h3>
+        <p>Strategic campaigns that boost awareness and drive engagement.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-camera"></i>
+        </div>
+        <h3 class="feature-title">Content Creation</h3>
+        <p>Compelling visuals and copy that capture your audience's attention.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Media Grid (Simplified) -->
+  <section id="work">
+    <div class="section-title">
+      <h2>Our Work</h2>
+      <p>See our creative process and recent projects</p>
+    </div>
+    <div class="dynamic-grid">
+      <div class="grid-item">
+        <div class="youtube-container">
+          <iframe src="https://www.youtube.com/embed/D3r5dxDSZXI?autoplay=0&mute=1&controls=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="grid-content">
+          <h3>Creative Process</h3>
+          <p>See our team in action</p>
+        </div>
+      </div>
+      <!-- Updated Content Creation Image -->
+      <div class="grid-item">
+        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+             alt="Content Creation Process" 
+             class="grid-media">
+        <div class="grid-content">
+          <h3>Content Creation</h3>
+          <p>Professional photo & video production</p>
+        </div>
+      </div>
+
+      <!-- Added new project image -->
+      <div class="grid-item">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+             alt="Team Collaboration" 
+             class="grid-media">
+        <div class="grid-content">
+          <h3>Creative Team</h3>
+          <p>Collaborative brainstorming sessions</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Media Carousel (Simplified) -->
+  <section>
+    <div class="section-title">
+      <h2>Testimonials</h2>
+      <p>What our clients say about us</p>
+    </div>
+    <div class="media-carousel-container">
+      <div class="media-carousel">
+        <div class="carousel-item">
+          <div class="testimonial-content">
+            <h3>Sarah Johnson</h3>
+            <p>The Branding Studio transformed our brand! We highly recommend them.</p>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="testimonial-content">
+            <h3>Michael Smith</h3>
+            <p>Incredible web design and marketing expertise. Our business has never been better!</p>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="testimonial-content">
+            <h3>Emily White</h3>
+            <p>Exceptional content creation skills. Our social media engagement has skyrocketed.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="contact">
+    <div class="section-title">
+      <h2>Contact Us</h2>
+      <p>Let's discuss your project</p>
+    </div>
+    <div class="ios-form-container">
+      <form class="ios-form" id="contactForm">
+        <input type="text" class="ios-input" placeholder="Your Name" required>
+        <input type="email" class="ios-input" placeholder="Your Email" required>
+        <input type="tel" class="ios-input" placeholder="Your Phone">
+        <textarea class="ios-input" placeholder="Your Message" rows="4" required></textarea>
+        <button type="submit" class="ios-button">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="ios-footer">
+    <div class="footer-links">
+      <a href="#services" class="footer-link">Services</a>
+      <a href="#work" class="footer-link">Our Work</a>
+      <a href="#contact" class="footer-link">Contact</a>
+      <a href="#" class="footer-link">Privacy Policy</a>
+    </div>
+
+    <div class="social-links">
+      <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+
+    <p class="copyright">&copy; 2025 The Branding Studio. All rights reserved.</p>
+  </footer>
+
+  <!-- particles.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+
+  <script>
+    // Initialize particles.js with cosmic theme
+    document.addEventListener('DOMContentLoaded', function() {
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": 160,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#007AFF"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "polygon": {
+              "nb_sides": 5
+            }
+          },
+          "opacity": {
+            "value": 0.5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 1,
+              "opacity_min": 0,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 3,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 4,
+              "size_min": 0.3,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#007AFF",
+            "opacity": 0.4,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 1,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": true,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 1
+              }
+            },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 8,
+              "speed": 3
+            },
+            "repulse": {
+              "distance": 200,
+              "duration": 0.4
+            },
+            "push": {
+              "particles_nb": 4
+            },
+            "remove": {
+              "particles_nb": 2
+            }
+          }
+        },
+        "retina_detect": true
+      });
+    });
+
+    // Show Dynamic Island notification
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission for demonstration
+      const dynamicIsland = document.getElementById('dynamicIsland');
+      dynamicIsland.classList.add('show');
+
+      // Hide the notification after 5 seconds
+      setTimeout(() => {
+        dynamicIsland.classList.remove('show');
+      }, 5000);
+    });
+  </script>
+</body>
+</html>

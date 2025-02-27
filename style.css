@@ -1,0 +1,51 @@
+/* Import component CSS files */
+@import url('avatar.css');
+@import url('banner.css');
+@import url('button.css');
+@import url('card.css');
+@import url('container.css');
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1, h2, h3, p {
+    margin: 0 0 15px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.form-container {
+    padding: 40px 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    cursor: pointer;
+}
